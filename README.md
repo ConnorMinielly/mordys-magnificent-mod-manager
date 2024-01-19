@@ -6,17 +6,17 @@ Okay here's the deal: Mod management for Baldur's Gate 3 on non-windows systems 
 
 Core:
 
-- [] Support reading `.pak` mode files by porting LSLib's PackageReader functions for BG3 to go.
-- [] Support exporting a portable cross platform binary than could be added to $PATH to make your life easy.
+- [ ] Support reading `.pak` mode files by porting LSLib's PackageReader functions for BG3 to go.
+- [ ] Support exporting a portable cross platform binary than could be added to $PATH to make your life easy.
 
 Mod Management:
 
-- [] Auto discover BG3 install locations.
-- [] Allow users to select campaign to apply mods against.
-- [] Let users designate a mod source folder on first use (and change on later uses if desired)
-- [] Allow users to "activate" downloaded mods in source folder, set mod load order with a terminal based UI.
-- [] Export a `modsettings.lsx` file and mod source to game folder.
-- [] Save and load mods and load order to json files (stretch goal: auto download missing mod files when importing from json)
+- [ ] Auto discover BG3 install locations.
+- [ ] Allow users to select campaign to apply mods against.
+- [ ] Let users designate a mod source folder on first use (and change on later uses if desired)
+- [ ] Allow users to "activate" downloaded mods in source folder, set mod load order with a terminal based UI.
+- [ ] Export a `modsettings.lsx` file and mod source to game folder.
+- [ ] Save and load mods and load order to json files (stretch goal: auto download missing mod files when importing from json)
 
 # Approach
 
