@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	lsgo "mordys/ls-go"
+	lsgo "mordys/lsgo"
 )
 
 func main() {

@@ -38,15 +38,15 @@ func ReadHeader(reader *bytes.Reader) (*LSPKHeader, error) {
 	return &header, nil
 }
 
-func ReadPak(file_path string) *LSPK {
-	data, err := os.ReadFile(file_path)
+func ReadPak(filePath string) *LSPK {
+	data, err := os.ReadFile(filePath)
 	if err != nil {
 		panic(err)
 	}
 
 	reader := bytes.NewReader(data)
 
-	var pak_results = new(LSPK)
+	var pakResults = new(LSPK)
 
 	sig, err := ReadSignature(reader)
 	if err != nil {
@@ -61,7 +61,7 @@ func ReadPak(file_path string) *LSPK {
 		if err != nil {
 			panic(err)
 		}
-		pak_results.Header = *header
+		pakResults.Header = *header
 	}
-	return pak_results
+	return pakResults
 }
