@@ -23,3 +23,11 @@ Mod Management:
 I'm going to try approaching this with some modern `go` because its highly portable, fairly low level while being easy to read and write, and most importantly it has the awesome Charm CLI tool set.
 
 First we're going to rebuild the LSLib PakReader functionality for BG3 mod files (and ONLY BG3 mod files), and if this proves to be possible then and only then while we approach building the actual mod manager CLI.
+
+# Prior Art
+
+- [LSLib](https://github.com/Norbyte/lslib) by Norbyte
+- [bg3se (Baldur's Gate 3 script extender)](https://github.com/Norbyte/bg3se) by Norbyte
+- [BG3 Mod Manager](https://github.com/LaughingLeader/BG3ModManager) by LaughingLeader
+- [baldurs gate 3 mod manager](https://github.com/mkinfrared/baldurs-gate3-mod-manager) by mkinfrared (attempts to support MacOS)
+- [BG3-Modders-Multitool](https://github.com/ShinyHobo/BG3-Modders-Multitool) by ShinyHobo
