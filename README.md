@@ -31,3 +31,10 @@ First we're going to rebuild the LSLib PakReader functionality for BG3 mod files
 - [BG3 Mod Manager](https://github.com/LaughingLeader/BG3ModManager) by LaughingLeader
 - [baldurs gate 3 mod manager](https://github.com/mkinfrared/baldurs-gate3-mod-manager) by mkinfrared (attempts to support MacOS)
 - [BG3-Modders-Multitool](https://github.com/ShinyHobo/BG3-Modders-Multitool) by ShinyHobo
+
+# Where Mod Files Go
+
+PAK files - C:\Users\ronno\AppData\Local\Larian Studios\Baldur's Gate 3\Mods\
+Mod Files - C:\Users\ronno\AppData\Local\Larian Studios\Baldur's Gate 3\PlayerProfiles\Public\modsettings.lsx
+
+![mods-folder](https://github.com/ConnorMinielly/mordys-magnificent-mod-manager/assets/25215145/1daddc4b-7e54-453e-8302-d73be8f3ff4f)
