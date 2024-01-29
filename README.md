@@ -37,4 +37,6 @@ First we're going to rebuild the LSLib PakReader functionality for BG3 mod files
 PAK files - C:\Users\ronno\AppData\Local\Larian Studios\Baldur's Gate 3\Mods\
 Mod Files - C:\Users\ronno\AppData\Local\Larian Studios\Baldur's Gate 3\PlayerProfiles\Public\modsettings.lsx
 
+File path linux reference - /home/deck/.steam/steam/steamapps/compatdata/1086940/pfx/drive_c/users/steamuser/AppData/Local/Larian Studios/Baldur's Gate 3/ 
+
 ![mods-folder](https://github.com/ConnorMinielly/mordys-magnificent-mod-manager/assets/25215145/1daddc4b-7e54-453e-8302-d73be8f3ff4f)
