@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -47,7 +48,18 @@ func ReadPak(filePath string) *LSPK {
 	fmt.Printf("header: %v\n", header)
 	pakResults.Header = header
 
-	ReadFileList(reader, int64(header.FileListOffset))
+	files := ReadFileList(reader, int64(header.FileListOffset))
+
+	metaFile := files[2]
+
+	reader.Seek(int64(metaFile.OffsetInFile1), io.SeekStart)
+	sourceBytes := make([]byte, metaFile.SizeOnDisk)
+	reader.Read(sourceBytes)
+
+	destBytes := make([]byte, metaFile.UncompressedSize)
+	lz4.UncompressBlock(sourceBytes, destBytes)
+
+	fmt.Println(string(destBytes[:]))
 
 	return pakResults
 }
@@ -72,7 +84,7 @@ func ReadHeader(reader *bytes.Reader) (LSPKHeader, error) {
 	return header, nil
 }
 
-func ReadFileList(reader *bytes.Reader, offset int64) {
+func ReadFileList(reader *bytes.Reader, offset int64) []LSPKFileEntry {
 	// 1. Seek by offset amount (file list offset is found in the header, turns out you only need to calculate size for older pak formats)
 	reader.Seek(offset, 0)
 
@@ -97,12 +109,14 @@ func ReadFileList(reader *bytes.Reader, offset int64) {
 
 	newReader := bytes.NewReader(destBytes)
 
-	// reader.Seek(offset+8, 0)
+	// TODO: Fix this to iterate a number of times = numFiles
 	for i := 0; i < 10; i++ {
 		var file LSPKFileEntry
 
 		binary.Read(newReader, binary.LittleEndian, &file)
 		fileEntries = append(fileEntries, file)
-		fmt.Println(string(file.Name[:]))
+		// fmt.Println(string(file.Name[:]))
 	}
+
+	return fileEntries
 }
