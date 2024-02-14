@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/pierrec/lz4"
 )
 
 // PAK READER ORDER OF OPERATIONS: Header Data
@@ -16,26 +18,6 @@ import (
 // 5. confirm version code is = 18, other engine versions are unsupported at this time
 // 6. If version matches 18, congrats you've pulled the meta data successfully from the pak file!
 
-func ReadSignature(reader *bytes.Reader) ([4]byte, error) {
-	var signatureBuffer [4]byte
-	err := binary.Read(reader, binary.LittleEndian, &signatureBuffer)
-	if err != nil {
-		log.Fatal("Failed to read signature of pak file:", err)
-		return [4]byte{}, err
-	}
-	return signatureBuffer, nil
-}
-
-func ReadHeader(reader *bytes.Reader) (LSPKHeader, error) {
-	var header LSPKHeader
-	err := binary.Read(reader, binary.LittleEndian, &header)
-	if err != nil {
-		log.Fatal("Failed to read header of pak file:", err)
-		return LSPKHeader{}, err
-	}
-	return header, nil
-}
-
 func ReadPak(filePath string) *LSPK {
 	data, err := os.ReadFile(filePath)
 
@@ -44,6 +26,7 @@ func ReadPak(filePath string) *LSPK {
 	}
 
 	reader := bytes.NewReader(data)
+	fmt.Println(reader.Len())
 
 	var pakResults = new(LSPK)
 
@@ -69,6 +52,26 @@ func ReadPak(filePath string) *LSPK {
 	return pakResults
 }
 
+func ReadSignature(reader *bytes.Reader) ([4]byte, error) {
+	var signatureBuffer [4]byte
+	err := binary.Read(reader, binary.LittleEndian, &signatureBuffer)
+	if err != nil {
+		log.Fatal("Failed to read signature of pak file:", err)
+		return [4]byte{}, err
+	}
+	return signatureBuffer, nil
+}
+
+func ReadHeader(reader *bytes.Reader) (LSPKHeader, error) {
+	var header LSPKHeader
+	err := binary.Read(reader, binary.LittleEndian, &header)
+	if err != nil {
+		log.Fatal("Failed to read header of pak file:", err)
+		return LSPKHeader{}, err
+	}
+	return header, nil
+}
+
 func ReadFileList(reader *bytes.Reader, offset int64) {
 	// 1. Seek by offset amount (file list offset is found in the header, turns out you only need to calculate size for older pak formats)
 	reader.Seek(offset, 0)
@@ -83,9 +86,23 @@ func ReadFileList(reader *bytes.Reader, offset int64) {
 	binary.Read(reader, binary.LittleEndian, &compressedSize)
 	fmt.Println(compressedSize)
 
-	// 4. Read a number of bytes = compressedSize from offset position (+ 8 now from the two reads above) into a byte buffer (?)
-	// https://github.com/Norbyte/lslib/blob/79323f6f0fd6311292ee6b6c81506c7d96b27e63/LSLib/LS/PackageReader.cs#L108
+	sourceBytes := make([]byte, compressedSize)
+	reader.Read(sourceBytes)
+	var fileEntry LSPKFileEntry
+	fileBufferSize := binary.Size(fileEntry) * int(numFiles)
+	destBytes := make([]byte, fileBufferSize)
+	lz4.UncompressBlock(sourceBytes, destBytes)
 
-	// 5. run lz4 decompression against that byte buffer
-	// https://github.com/Norbyte/lslib/blob/79323f6f0fd6311292ee6b6c81506c7d96b27e63/LSLib/LS/PackageReader.cs#L117
+	var fileEntries []LSPKFileEntry
+
+	newReader := bytes.NewReader(destBytes)
+
+	// reader.Seek(offset+8, 0)
+	for i := 0; i < 10; i++ {
+		var file LSPKFileEntry
+
+		binary.Read(newReader, binary.LittleEndian, &file)
+		fileEntries = append(fileEntries, file)
+		fmt.Println(string(file.Name[:]))
+	}
 }
