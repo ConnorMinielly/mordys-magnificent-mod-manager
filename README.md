@@ -26,6 +26,23 @@ Okay here's the deal: Mod management for Baldur's Gate 3 on non-windows systems 
 
 - [ ] Support reading `.pak` files by porting LSLib's PackageReader functions for BG3 to go.
 
+# Initial `load-order.json` Spec
+
+Load order is determined by the index of mod entry in the `mods` array (in descending order, so 0 index is first in the load order).
+
+```json
+{
+  "modFixer": true, // We should package the mod fixer and allow users to activate it when needed with this simple flag.
+  "mods": [
+    {
+      "name": "Aether's Black Dyes",
+      "path": "M4_MOD_FOLDER/black-dye/aethers-black-dye.pak",
+      "author": "Aetherpoint" // optional
+    }
+  ]
+}
+```
+
 # FAQ With Mordenkainen 🧙🏼‍♂️
 
 ## Q: Wait, why not just use the existing tools again?
@@ -48,13 +65,17 @@ I've thought carefully about what these tools need to be able to do. Every funct
 
 Well well well, think you clever eh? If you know that much, then you'd also know that I've traveled throughout the many realms and been to countless worlds. In fact, I've even been to your Earth! I'm a good friend of Elminster Aumer who got his grey beard all twisted up in the story of this game, and I was even I Avernus monitoring the state of the Blood War during the events that immediately preceded the story of BG3. For more on that, you can reference the earthling tome "Descent Into Avernus". All that to say: Nice try, but shut up Nerd!
 
-# Prior Art
+# Prior Art and References
 
 - [LSLib](https://github.com/Norbyte/lslib) by Norbyte
 - [bg3se (Baldur's Gate 3 script extender)](https://github.com/Norbyte/bg3se) by Norbyte
 - [BG3 Mod Manager](https://github.com/LaughingLeader/BG3ModManager) by LaughingLeader
+- [BG3 Modding Tools](https://github.com/LaughingLeader/BG3ModdingTools/tree/master) by LaughingLeader
 - [baldurs gate 3 mod manager](https://github.com/mkinfrared/baldurs-gate3-mod-manager) by mkinfrared (attempts to support MacOS)
 - [BG3-Modders-Multitool](https://github.com/ShinyHobo/BG3-Modders-Multitool) by ShinyHobo
+- [Awesome BG3](https://github.com/bg3mods/awesome-bg3)
+- [BG3 Community Library](https://github.com/BG3-Community-Library-Team/BG3-Community-Library)
+- [Norbyte's Resource Search Engine](https://bg3.norbyte.dev/search) by Norbyte
 
 # Where Mod Files Go In Linux
 
