@@ -11,14 +11,6 @@ import (
 	"github.com/pierrec/lz4"
 )
 
-// PAK READER ORDER OF OPERATIONS: Header Data
-// 1. read .pak file into go as binary.
-// 2. grab first 4 bytes and check that they match the signature string "LSPK" or [0x4C,0x53,0x50,0x4B]
-// 3. if match, seek past the 4 byte signature block.
-// 4. read ext block of binary into the Header struct (see code fo data shape)
-// 5. confirm version code is = 18, other engine versions are unsupported at this time
-// 6. If version matches 18, congrats you've pulled the meta data successfully from the pak file!
-
 func ReadPak(filePath string) *LSPK {
 	data, err := os.ReadFile(filePath)
 
@@ -27,7 +19,6 @@ func ReadPak(filePath string) *LSPK {
 	}
 
 	reader := bytes.NewReader(data)
-	fmt.Println(reader.Len())
 
 	var pakResults = new(LSPK)
 
@@ -45,7 +36,6 @@ func ReadPak(filePath string) *LSPK {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("header: %v\n", header)
 	pakResults.Header = header
 
 	files := ReadFileList(reader, int64(header.FileListOffset))
@@ -59,7 +49,9 @@ func ReadPak(filePath string) *LSPK {
 	destBytes := make([]byte, metaFile.UncompressedSize)
 	lz4.UncompressBlock(sourceBytes, destBytes)
 
-	fmt.Println(string(destBytes[:]))
+	metaData := ReadLsx(destBytes)
+
+	fmt.Println(metaData.Simplify())
 
 	return pakResults
 }
@@ -91,12 +83,10 @@ func ReadFileList(reader *bytes.Reader, offset int64) []LSPKFileEntry {
 	// 2. read a 32 bit integer, this is the number of files in the mod.
 	var numFiles int32
 	binary.Read(reader, binary.LittleEndian, &numFiles)
-	fmt.Println(numFiles)
 
 	// 3. read another 32 bit integer, that is the size in bytes of the compression block (i think theres a shit ton of )
 	var compressedSize int32
 	binary.Read(reader, binary.LittleEndian, &compressedSize)
-	fmt.Println(compressedSize)
 
 	sourceBytes := make([]byte, compressedSize)
 	reader.Read(sourceBytes)

@@ -3,17 +3,18 @@ package lsgo
 type LSPK struct {
 	Signature [4]byte
 	Header    LSPKHeader
+	Files     []LSPKFileEntry
 }
 
 // Larian Studios Pak Header
 type LSPKHeader struct {
-	Version        uint32   // 4
-	FileListOffset uint64   // 8
-	FileListSize   uint32   // 4
-	Flags          byte     // 1
-	Priority       byte     // 1
-	Md5            [16]byte // 16
-	NumParts       uint16   // 2
+	Version        uint32
+	FileListOffset uint64
+	FileListSize   uint32
+	Flags          byte
+	Priority       byte
+	Md5            [16]byte
+	NumParts       uint16
 }
 
 // Larian Studios Pak Sub-File Entry
