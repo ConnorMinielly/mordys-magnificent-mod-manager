@@ -2,7 +2,6 @@ package lsgo
 
 import (
 	"encoding/xml"
-	"fmt"
 )
 
 // Root struct representing an LSX file
@@ -12,25 +11,7 @@ type LSX struct {
 	Region  lsxRegion  `xml:"region"`
 }
 
-// This is a helper function that will likely get scraped or rewritten, but for now can be used to consolidate complex nested lsx data into known data structures
-func (lsx LSX) Simplify() any {
-	switch lsx.Region.Id {
-	case "Config": // meta.lsx
-		metaLsx := MetaLsx{
-			Version: lsx.Version.GetVersionString(),
-			Name:    lsx.Region.Get("root").GetChild("ModuleInfo").GetAttribute("Name").Value,
-			Author:  lsx.Region.Get("root").GetChild("ModuleInfo").GetAttribute("Author").Value,
-			UUID:    lsx.Region.Get("root").GetChild("ModuleInfo").GetAttribute("UUID").Value,
-		}
-		return metaLsx
-	case "ModuleSettings": // modsettings.lsx
-		return lsx
-	default:
-		fmt.Println("WARNING: Can't simplify this lsx data into a known structure.")
-		return lsx
-	}
-}
-
+// Maps attrs of Version lsx element
 type lsxVersion struct {
 	Major    string `xml:"major,attr"`
 	Minor    string `xml:"minor,attr"`
@@ -38,58 +19,32 @@ type lsxVersion struct {
 	Build    string `xml:"build,attr"`
 }
 
-func (version lsxVersion) GetVersionString() string {
-	return fmt.Sprintf("%s.%s.%s.%s", version.Major, version.Minor, version.Revision, version.Build)
-}
-
+// Maps attrs of Region lsx element
 type lsxRegion struct {
 	Id    string    `xml:"id,attr"`
 	Nodes []lsxNode `xml:"node"`
 }
 
-func (region lsxRegion) Get(match string) lsxNode {
-	for _, node := range region.Nodes {
-		if node.Id == match {
-			return node
-		}
-	}
-	return lsxNode{}
-}
-
+// Maps attrs of Node lsx element
 type lsxNode struct {
 	Id         string         `xml:"id,attr"`
-	Attributes []lsxAttribute `xml:"attribute"`
-	Children   lsxChildren    `xml:"children"`
+	Attributes []lsxAttribute `xml:"attribute"` // A node can have some or no attributes AND
+	Children   lsxChildren    `xml:"children"`  // A node can have no children lsx element OR one children lsx element
 }
 
-func (node lsxNode) GetAttribute(match string) lsxAttribute {
-	for _, attr := range node.Attributes {
-		if attr.Id == match {
-			return attr
-		}
-	}
-	return lsxAttribute{}
-}
-
-func (rootNode lsxNode) GetChild(match string) lsxNode {
-	for _, node := range rootNode.Children.Nodes {
-		if node.Id == match {
-			return node
-		}
-	}
-	return lsxNode{}
-}
-
+// Maps attrs of Children lsx element
 type lsxChildren struct {
-	Nodes []lsxNode `xml:"node"`
+	Nodes []lsxNode `xml:"node"` // This is a recursive struct, containing nodes
 }
 
+// Maps attrs of Attribute lsx element
 type lsxAttribute struct {
 	Id    string `xml:"id,attr"`
-	Type  string `xml:"type,attr"`
-	Value string `xml:"value,attr"`
+	Type  string `xml:"type,attr"`  // directly maps to the type of the attribute
+	Value string `xml:"value,attr"` // directly maps to the value of the attribute
 }
 
+// Final struct representing meta.lsx attrs we care about
 type MetaLsx struct {
 	Version string
 	Name    string
