@@ -4,6 +4,11 @@ import (
 	"encoding/xml"
 )
 
+type ILsx interface {
+	lsxAttribute | lsxNode
+	GetId() string
+}
+
 // Root struct representing an LSX file
 type LSX struct {
 	XMLName xml.Name   `xml:"save"` // save seems to be the root tag of all (?) lsx files

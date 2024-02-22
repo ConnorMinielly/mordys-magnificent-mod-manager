@@ -26,38 +26,32 @@ func (version lsxVersion) GetVersionString() string {
 	return fmt.Sprintf("%s.%s.%s.%s", version.Major, version.Minor, version.Revision, version.Build)
 }
 
-// func GetGeneric[T lsxNode | lsxAttribute](data []T, match string) T {
-// 	for _, node := range data {
-// 		if node.Id == match {
-// 			return node
-// 		}
-// 	}
-// 	return lsxNode{}
-// }
+func (node lsxNode) GetId() string {
+	return node.Id
+}
 
-func (region lsxRegion) Get(match string) lsxNode {
-	for _, node := range region.Nodes {
-		if node.Id == match {
+func (attr lsxAttribute) GetId() string {
+	return attr.Id
+}
+
+func GetGeneric[T ILsx](data []T, match string) T {
+	for _, node := range data {
+		if node.GetId() == match {
 			return node
 		}
 	}
-	return lsxNode{}
+	var emptyReturn T
+	return emptyReturn // TODO: Find better way of doing this
+}
+
+func (region lsxRegion) Get(match string) lsxNode {
+	return GetGeneric[lsxNode](region.Nodes, match)
 }
 
 func (node lsxNode) GetAttribute(match string) lsxAttribute {
-	for _, attr := range node.Attributes {
-		if attr.Id == match {
-			return attr
-		}
-	}
-	return lsxAttribute{}
+	return GetGeneric[lsxAttribute](node.Attributes, match)
 }
 
 func (rootNode lsxNode) GetChild(match string) lsxNode {
-	for _, node := range rootNode.Children.Nodes {
-		if node.Id == match {
-			return node
-		}
-	}
-	return lsxNode{}
+	return GetGeneric[lsxNode](rootNode.Children.Nodes, match)
 }
