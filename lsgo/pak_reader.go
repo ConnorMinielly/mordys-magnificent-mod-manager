@@ -11,16 +11,15 @@ import (
 	"github.com/pierrec/lz4"
 )
 
-func ReadPak(filePath string) *LSPK {
+func ReadPak(filePath string) *Pak {
 	data, err := os.ReadFile(filePath)
-
 	if err != nil {
 		panic(err)
 	}
 
 	reader := bytes.NewReader(data)
 
-	var pakResults = new(LSPK)
+	pakResults := new(Pak)
 
 	sig, err := ReadSignature(reader)
 	if err != nil {
@@ -51,7 +50,7 @@ func ReadPak(filePath string) *LSPK {
 
 	metaData := ReadLsx(destBytes)
 
-	fmt.Println(metaData.Simplify())
+	fmt.Println(metaData.Consolidate())
 
 	return pakResults
 }
@@ -66,17 +65,17 @@ func ReadSignature(reader *bytes.Reader) ([4]byte, error) {
 	return signatureBuffer, nil
 }
 
-func ReadHeader(reader *bytes.Reader) (LSPKHeader, error) {
-	var header LSPKHeader
+func ReadHeader(reader *bytes.Reader) (PakHeader, error) {
+	var header PakHeader
 	err := binary.Read(reader, binary.LittleEndian, &header)
 	if err != nil {
 		log.Fatal("Failed to read header of pak file:", err)
-		return LSPKHeader{}, err
+		return PakHeader{}, err
 	}
 	return header, nil
 }
 
-func ReadFileList(reader *bytes.Reader, offset int64) []LSPKFileEntry {
+func ReadFileList(reader *bytes.Reader, offset int64) []PakFileEntry {
 	// 1. Seek by offset amount (file list offset is found in the header, turns out you only need to calculate size for older pak formats)
 	reader.Seek(offset, 0)
 
@@ -90,18 +89,18 @@ func ReadFileList(reader *bytes.Reader, offset int64) []LSPKFileEntry {
 
 	sourceBytes := make([]byte, compressedSize)
 	reader.Read(sourceBytes)
-	var fileEntry LSPKFileEntry
+	var fileEntry PakFileEntry
 	fileBufferSize := binary.Size(fileEntry) * int(numFiles)
 	destBytes := make([]byte, fileBufferSize)
 	lz4.UncompressBlock(sourceBytes, destBytes)
 
-	var fileEntries []LSPKFileEntry
+	var fileEntries []PakFileEntry
 
 	newReader := bytes.NewReader(destBytes)
 
 	// TODO: Fix this to iterate a number of times = numFiles
 	for i := 0; i < 10; i++ {
-		var file LSPKFileEntry
+		var file PakFileEntry
 
 		binary.Read(newReader, binary.LittleEndian, &file)
 		fileEntries = append(fileEntries, file)

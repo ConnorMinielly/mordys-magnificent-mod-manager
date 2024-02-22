@@ -1,13 +1,14 @@
 package lsgo
 
-type LSPK struct {
+// Represents a Larian Studios Pak file
+type Pak struct {
+	Files     []PakFileEntry
+	Header    PakHeader
 	Signature [4]byte
-	Header    LSPKHeader
-	Files     []LSPKFileEntry
 }
 
 // Larian Studios Pak Header
-type LSPKHeader struct {
+type PakHeader struct {
 	Version        uint32
 	FileListOffset uint64
 	FileListSize   uint32
@@ -18,7 +19,7 @@ type LSPKHeader struct {
 }
 
 // Larian Studios Pak Sub-File Entry
-type LSPKFileEntry struct {
+type PakFileEntry struct {
 	Name             [256]byte
 	OffsetInFile1    uint32
 	OffsetInFile2    uint16
