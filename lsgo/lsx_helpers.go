@@ -49,6 +49,7 @@ func GetGeneric[T lsxElement](data []T, match string) T {
 	// If no match is found, return a new instance of the type as a default value:
 	// The `new` built-in allocates storage for a variable of any type and returns
 	// a pointer to it, so dereferencing *new(T) effectively yields the zero value for T.
+	// https://stackoverflow.com/a/70589302
 	return *new(T) // https://go.dev/ref/spec#Allocation
 }
 
