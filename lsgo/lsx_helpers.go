@@ -46,8 +46,10 @@ func GetGeneric[T lsxElement](data []T, match string) T {
 			return node
 		}
 	}
-	var emptyReturn T
-	return emptyReturn //  TODO: Find better way of doing this
+	// If no match is found, return a new instance of the type as a default value:
+	// The `new` built-in allocates storage for a variable of any type and returns
+	// a pointer to it, so dereferencing *new(T) effectively yields the zero value for T.
+	return *new(T) // https://go.dev/ref/spec#Allocation
 }
 
 func (region lsxRegion) GetNode(match string) lsxNode {
