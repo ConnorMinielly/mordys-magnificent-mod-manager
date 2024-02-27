@@ -32,12 +32,14 @@ type lsxElement interface {
 	GetId() string         // All lsx elements have an id attribute, which must be accessible from within the type constraint
 }
 
+// Receiver function for node elements
 func (node lsxNode) GetId() string {
-	return node.Id
+	return node.Id // Node elements have node ids
 }
 
+// Receiver function for attribute elements
 func (attr lsxAttribute) GetId() string {
-	return attr.Id
+	return attr.Id // Attribute elements have attribute ids
 }
 
 func GetGeneric[T lsxElement](data []T, match string) T {
