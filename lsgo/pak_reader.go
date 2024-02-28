@@ -11,6 +11,7 @@ import (
 	"github.com/pierrec/lz4"
 )
 
+// Reads a pak file and returns a Pak struct
 func ReadPak(filePath string) *Pak {
 	data, err := os.ReadFile(filePath)
 	if err != nil {

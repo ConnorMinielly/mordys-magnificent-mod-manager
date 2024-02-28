@@ -32,12 +32,14 @@ type lsxElement interface {
 	GetId() string         // All lsx elements have an id attribute, which must be accessible from within the type constraint
 }
 
+// Receiver function for node elements
 func (node lsxNode) GetId() string {
-	return node.Id
+	return node.Id // Node elements have node ids
 }
 
+// Receiver function for attribute elements
 func (attr lsxAttribute) GetId() string {
-	return attr.Id
+	return attr.Id // Attribute elements have attribute ids
 }
 
 func GetGeneric[T lsxElement](data []T, match string) T {
@@ -46,8 +48,11 @@ func GetGeneric[T lsxElement](data []T, match string) T {
 			return node
 		}
 	}
-	var emptyReturn T
-	return emptyReturn //  TODO: Find better way of doing this
+	// If no match is found, return a new instance of the type as a default value:
+	// The `new` built-in allocates storage for a variable of any type and returns
+	// a pointer to it, so dereferencing *new(T) effectively yields the zero value for T.
+	// https://stackoverflow.com/a/70589302
+	return *new(T) // https://go.dev/ref/spec#Allocation
 }
 
 func (region lsxRegion) GetNode(match string) lsxNode {
