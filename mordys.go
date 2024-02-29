@@ -1,12 +1,7 @@
 package main
 
-import (
-	lsgo "mordys/lsgo"
-)
+import "mordys/cmd"
 
 func main() {
-	// lsx := lsgo.ReadLsxFromFile("./test_files/meta.lsx")
-
-	// fmt.Println(lsx.Simplify())
-	lsgo.ReadPak("./test_files/BlackDye.pak")
+	cmd.Execute()
 }

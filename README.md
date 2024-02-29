@@ -32,13 +32,26 @@ Load order is determined by the index of mod entry in the `mods` array (in desce
 
 ```json
 {
-  "modFixer": true, // We should package the mod fixer and allow users to activate it when needed with this simple flag.
+  "bg3Install": "~/deck/.local/share/Steam/steamapps/compatdata/1086940/pfx/drive_C/users/steamuser/appdata/local/Larian Studios",
+  "modFixer": true, // We could package the mod fixer and allow users to activate it when needed with this simple flag.
+  "modFolder": "~/bg3-mods/",
   "mods": [
     {
       "name": "Aether's Black Dyes",
-      "path": "M4_MOD_FOLDER/black-dye/aethers-black-dye.pak",
+      "path": "${modFolder}/black-dye/aethers-black-dye.pak",
       "author": "Aetherpoint" // optional
     }
+  ]
+}
+
+// OR
+
+{
+  "bg3Install": "~/deck/.local/share/Steam/steamapps/compatdata/1086940/pfx/drive_C/users/steamuser/appdata/local/Larian Studios",
+  "modFixer": true, // We could package the mod fixer and allow users to activate it when needed with this simple flag.
+  "modFolder": "~/bg3-mods/",
+  "mods": [
+   "${modFolder}/black-dye/aethers-black-dye.pak",
   ]
 }
 ```
