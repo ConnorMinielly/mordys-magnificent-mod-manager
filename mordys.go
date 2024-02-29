@@ -1,6 +1,8 @@
 package main
 
-import "mordys/cmd"
+import (
+	cmd "mordys/m4"
+)
 
 func main() {
 	cmd.Execute()
