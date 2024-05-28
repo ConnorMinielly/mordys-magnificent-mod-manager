@@ -1,4 +1,4 @@
-module mordys
+module lsgo
 
 go 1.21.6
 
